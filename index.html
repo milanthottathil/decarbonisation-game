@@ -63,9 +63,13 @@
             padding-top: 0px; /* Adjust the padding value to move the text up */
          }
 
+         .tile p {
+            margin-top: 0px; /* Adjust this value to reduce the space between the image and text */
+        } 
+
         .tile img {
             width: 100px;
-            height: 80px;
+            height: 90px;
             display: block;
             margin: 0px auto;
         }
@@ -97,7 +101,7 @@
             border: 1px solid #000;    /* This will put the content inside a box */
             padding: 20px;             /* Add some padding inside the box */
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);   /* Optional: Adds a subtle shadow for a better look */
-            background-image: url('https://github.com/milanthottathil/decarbonisation-game/blob/main/Box%20bac.jpg?raw=true');
+            background-image: url('./Images/Box bac.jpg');
             background-size: contain;  /* this will ensure the image covers the entire tile box */
             background-position: center;  /* this centers the image in the tile box */
             background-repeat: no-repeat;  /* this will prevent the image from repeating if it's smaller than the tile box*/
@@ -205,8 +209,8 @@
                 <div class="left-tile-container">
                     <h3>Decarbonisation Solutions</h3>
                     <div class="tile" draggable="true" ondragstart="drag(event)" id="LED Lighting">
-                        <img src="Images/LED Lighing.jpg" alt="LED Lighting">
-                        <p>LED Lighting</p>
+                        <img src="Images/Wind power.jpg" alt="LED Lighting">
+                        <p>Wind power vs Coal</p>
                     </div>
                     <div class="tile" draggable="true" ondragstart="drag(event)" id="Electric Heat pump">
                         <img src="Images/Electric Heat pump.jpg" alt="Electric Heat pump">
@@ -267,7 +271,7 @@
 
 
     <p id="result"></p>
-    <img id="resultImage" class="result-image" src="https://github.com/milanthottathil/decarbonisation-game/blob/main/CO2%20Grey.jpg?raw=true" alt="Result" />
+    <img id="resultImage" class="result-image" src="Images/CO2 Grey.jpg" alt="Result" />
 
     <script>
         // Store initial containers and placeholders
@@ -350,8 +354,8 @@
                 <div class="left-tile-container">
                     <h3>Decarbonisation Solutions</h3>
                     <div class="tile" draggable="true" ondragstart="drag(event)" id="LED Lighting">
-                        <img src="Images/LED Lighing.jpg" alt="LED Lighting">
-                        <p>LED Lighting</p>
+                        <img src="Images/Wind power.jpg" alt="LED Lighting">
+                        <p>Wind power for Coal</p>
                     </div>
                     <div class="tile" draggable="true" ondragstart="drag(event)" id="Electric Heat pump">
                         <img src="Images/Electric Heat pump.jpg" alt="Electric Heat pump">
@@ -388,7 +392,7 @@
             const resultImage = document.getElementById('resultImage');
 
             resultElement.textContent = '';
-            resultImage.src = "https://github.com/milanthottathil/decarbonisation-game/blob/main/CO2%20Grey.jpg?raw=true"; // Assuming this is the initial image
+            resultImage.src = "Images/CO2 Grey.jpg"; // Assuming this is the initial image
         }
 
         function closeModal() {
