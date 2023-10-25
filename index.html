@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decarbonisation Strategy Game</title>
+
+    <style>
+
+        #game {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #placeholders {
+            display: flex;
+            flex-direction: row;
+            align-items: start;
+        }
+
+        .placeholder {
+            width: 100px;
+            height: 120px;
+            border: 1px dashed black;
+            margin-left: 15px;
+            margin-top: 40px;
+            background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity. Adjust the last value (0.8) as needed. */
+        }
+
+        .placeholder:nth-child(2) {
+            margin-left: 35px;
+            margin-top: 60px;
+        }
+
+        .placeholder:nth-child(3) {
+            margin-left: 35px;
+            margin-top: 80px;
+        }
+
+        .placeholder:nth-child(4) {
+            margin-left: 35px;
+            margin-top: 100px;
+        }
+
+        .placeholder:nth-child(5) {
+            margin-left: 35px;
+            margin-top: 120px;
+        }
+
+        .placeholder:nth-child(6) {
+            margin-left: 35px;
+            margin-top: 140px;
+        }
+
+        .tile {
+            width: 100px;
+            height: 130px;
+            border: 1px solid black;
+            margin: 5px auto;
+            text-align: center;
+            background-color: #FFD700;
+            padding-top: 0px; /* Adjust the padding value to move the text up */
+         }
+
+        .tile img {
+            width: 100px;
+            height: 80px;
+            display: block;
+            margin: 0px auto;
+        }
+
+        #result {
+            font-size: 50px;
+            margin-top: 10px;
+            z-index: 1;
+        }
+
+        .dragging {
+            position: fixed;
+            width: 100px;
+            pointer-events: none;
+        }
+
+        .result-image {
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            width: 125px; /* Adjust the width as needed */
+            height: 100; /* Maintain aspect ratio */
+            z-index: 1; /* Ensure the image is on top of other elements */
+        }
+
+        .placeholder-box {
+            width: 1350px;
+            height: 350px;
+            border: 1px solid #000;    /* This will put the content inside a box */
+            padding: 20px;             /* Add some padding inside the box */
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);   /* Optional: Adds a subtle shadow for a better look */
+            background-image: url('./Images/Box bac.jpg');
+            background-size: contain;  /* this will ensure the image covers the entire tile box */
+            background-position: center;  /* this centers the image in the tile box */
+            background-repeat: no-repeat;  /* this will prevent the image from repeating if it's smaller than the tile box*/
+        }
+
+        h1 {
+            margin-top: 15px;     /* adjust value as needed */
+            margin-bottom: 5px;  /* adjust value as needed */
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 5px;     /* adjust value as needed */
+            text-align: center;
+            color: Grey; /* Use the appropriate color value, and make sure "color" is lowercase */
+        }
+
+
+        .left-tile-container h3 {
+            margin-top: 5px;     /* adjust value as needed */
+            margin-bottom: 0px;  /* adjust value as needed */
+            margin-left:5px;
+            font-size: 15px;
+                        
+        }
+
+        .left-tile-container {
+            width: 120px;
+            height: 400px;
+            border: 1px solid #000;
+            background-color: #f0f8ff;
+        }
+
+        .right-tile-container h3 {
+            margin-top: 5px;     /* adjust value as needed */
+            margin-bottom: 0px;  /* adjust value as needed */
+            margin-left:15px;
+            font-size: 15px;
+        }
+
+        .right-tile-container {
+            width: 120px;
+            height: 400px;
+            border: 1px solid #000;
+            background-color: #f0f8ff;
+        }
+
+        .centered-buttons {
+            text-align: center;  /* This will center the inline elements like buttons */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #f4f4f4;
+            margin: 15% auto;
+            padding: 20px;
+            width: 50%;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            text-align: center;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            font-size: 28px; /* Adjust the size as needed */
+        }
+
+        .modal-content p {
+            font-size: 20px; /* Adjust the size as needed */
+        }
+
+        .modal-content button {
+            font-size: 20px; /* Adjust the size as needed */
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <h1>Decarbonisation Strategy</h1>
+    <h2>Arrange the Solutions in Decreasing order of CO2 savings</h2>
+     <div id="game-container">
+
+        <div id="game">
+            <div id="tiles-left">
+                <div class="left-tile-container">
+                    <h3>Decarbonisation Solutions</h3>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="LED Lighting">
+                        <img src="Images/LED Lighing.jpg" alt="LED Lighting">
+                        <p>LED Lighting</p>
+                    </div>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Electric Heat pump">
+                        <img src="Images/Electric Heat pump.jpg" alt="Electric Heat pump">
+                        <p>Electric Heat pump</p>
+                    </div>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Hydrogen Boilers">
+                        <img src="Images/Hydrogen Boilers.jpg" alt="Hydrogen Boilers">
+                        <p>Hydrogen Boilers</p>
+                    </div>
+                </div>
+            </div>
+            <div class="placeholder-box">
+                <div id="placeholders">
+                    <div class="placeholder" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div class="placeholder" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div class="placeholder" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div class="placeholder" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div class="placeholder" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div class="placeholder" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                </div>
+            </div>
+            <div id="tiles-right">
+                <div class="right-tile-container">
+                    <h3>Technological Interventions</h3>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Insulation & Glazing">
+                        <img src="Images/Insulation & Glazing.jpg" alt="Insulation & Glazing">
+                        <p>Insulation & Glazing</p>
+                    </div>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Geothermal">
+                        <img src="Images/Geothermal.jpg" alt="Geothermal">
+                        <p>Geothermal</p>
+                    </div>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Solar PV">
+                        <img src="Images/Solar PV.jpg" alt="Solar PV">
+                        <p>Solar PV</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="centered-buttons">
+        <p></p>
+        <button onclick="checkScore()">Finish</button>
+        <button onclick="resetGame()">Reset</button>
+    </div>
+
+    <!-- Modal Result Structure -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Result</h2>
+            <p id="modalResultText">Result goes here</p>
+            <button id="playAgainButton" onclick="playAgain()">Play Again</button>
+        </div>
+    </div>
+
+
+    <p id="result"></p>
+    <img id="resultImage" class="result-image" src="Images/CO2 Grey.jpg" alt="Result" />
+
+    <script>
+        // Store initial containers and placeholders
+        const tilesLeft = document.getElementById("tiles-left");
+        const tilesRight = document.getElementById("tiles-right");
+        const placeholders = document.getElementById("placeholders").innerHTML;
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            var draggedElement = document.getElementById(data);
+
+            if (ev.target.classList.contains('placeholder')) {
+                if (ev.target.children.length > 0) {
+                    tilesContainer.appendChild(ev.target.firstChild);
+                }
+                ev.target.appendChild(draggedElement);
+            }
+        }
+
+        function checkScore() {
+            const scores = {
+                'LED Lighting': 6,
+                'Insulation & Glazing': 5,
+                'Electric Heat pump': 4,
+                'Solar PV': 3,
+                'Geothermal': 2,
+                'Hydrogen Boilers':1,
+
+            };
+
+            const placeholders = document.querySelectorAll('.placeholder');
+            let score = 0;
+
+            placeholders.forEach((placeholder, index) => {
+                const tile = placeholder.children[0];
+                if (tile) {
+                    const multiplier = [100000, 10000, 1000, 100,10,1][index];
+                    score += scores[tile.id] * multiplier;
+                }
+            });
+
+            const resultElement = document.getElementById('result');
+            const resultImage = document.getElementById('resultImage');
+
+            const modalResultText = document.getElementById('modalResultText');
+            const playAgainButton = document.getElementById('playAgainButton');
+
+            if (score > 543210) {
+                resultImage.src = 'Images/CO2 Green.jpg';
+                modalResultText.textContent = 'Brilliant! You are on the way to Net Zero!';
+                modalResultText.style.color = 'green'; // Set the color to green
+            } else if (score >= 334443 && score <= 543210) {
+                resultImage.src = 'Images/CO2 Amber.jpg';
+                modalResultText.textContent = 'That was not bad! But try again to reach that Net Zero target?';
+                modalResultText.style.color = 'orange'; // Set the color to orange
+            } else {
+                resultImage.src = 'Images/CO2 Red.jpg';
+                modalResultText.textContent = 'That is not quite right! Retry again?';
+                modalResultText.style.color = 'red'; // Set the color to red
+            }
+            resultImage.style.display = 'block';   // Show the result image
+
+            // Show the modal
+            const modal = document.getElementById('resultModal');
+            modal.style.display = 'block';
+        }
+
+        function resetGame() {
+            // Reset the containers and placeholders to their initial state
+            tilesLeft.innerHTML = `
+                <div class="left-tile-container">
+                    <h3>Decarbonisation Solutions</h3>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="LED Lighting">
+                        <img src="Images/LED Lighing.jpg" alt="LED Lighting">
+                        <p>LED Lighting</p>
+                    </div>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Electric Heat pump">
+                        <img src="Images/Electric Heat pump.jpg" alt="Electric Heat pump">
+                        <p>Electric Heat pump</p>
+                    </div>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Hydrogen Boilers">
+                        <img src="Images/Hydrogen Boilers.jpg" alt="Hydrogen Boilers">
+                        <p>Hydrogen Boilers</p>
+                    </div>
+                </div>
+            `;
+            tilesRight.innerHTML = `
+                <div class="right-tile-container">
+                    <h3>Technological Interventions</h3>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Insulation & Glazing">
+                        <img src="Images/Insulation & Glazing.jpg" alt="Insulation & Glazing">
+                        <p>Insulation & Glazing</p>
+                    </div>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Geothermal">
+                        <img src="Images/Geothermal.jpg" alt="Geothermal">
+                        <p>Geothermal</p>
+                    </div>
+                    <div class="tile" draggable="true" ondragstart="drag(event)" id="Solar PV">
+                        <img src="Images/Solar PV.jpg" alt="Solar PV">
+                        <p>Solar PV</p>
+                    </div>
+                </div>
+            `;
+            // Restore placeholders
+            document.getElementById("placeholders").innerHTML = placeholders;
+
+            // Reset the result and resultImage elements to their initial state
+            const resultElement = document.getElementById('result');
+            const resultImage = document.getElementById('resultImage');
+
+            resultElement.textContent = '';
+            resultImage.src = "Images/CO2 Grey.jpg"; // Assuming this is the initial image
+        }
+
+        function closeModal() {
+            // Hide the modal
+            const modal = document.getElementById('resultModal');
+            modal.style.display = 'none';
+
+            resetGame();
+        }
+
+        function playAgain() {
+            // Close the modal
+            closeModal();
+
+            // Call your resetGame function or any other logic to reset the game
+            resetGame();
+        }
+    </script>
+</body>
+
+</html>
